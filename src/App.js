@@ -46,8 +46,9 @@ function App() {
   };
 
   return (
-    <div className="w-3/4 m-auto">
-      <div className="mt-20">
+    <>
+      <div className="w-3/4 m-auto">
+        <p className="heading flex justify-center">News</p>
         <Slider {...settings}>
         {data.map((article, index) => {
           if (!article.urlToImage) {
@@ -70,7 +71,7 @@ function App() {
         })}
         </Slider>
       </div>
-    </div>
+    </>
   );
 }
 

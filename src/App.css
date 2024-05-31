@@ -4,6 +4,13 @@
 
 @layer base{
   body{
-    background-color: #14161b;
+    background-color: #02081b;
   }
+}
+
+.heading{
+  align-items: center;
+  font-size: 100px;
+  color: antiquewhite;
+  font-family: Arial, Helvetica, sans-serif;
 }
