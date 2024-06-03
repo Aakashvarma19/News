@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    background-color: #1A202C; /* Dark Blue */
+    background-color: #1A202C; 
     color: #FFFFFF;
   }
 }
@@ -31,23 +31,22 @@
   justify-content: center;
   align-items: center;
   font-size: 2.5rem;
-  color: #FFD700; /* Bright Yellow */
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0px 0;
+  color: #FFD700; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
+  font-family: 'Arial Black', sans-serif;
 }
 
 .news-container {
   width: 80%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #2D3748; /* Slightly lighter dark blue for contrast */
+  margin: 10px auto;
+  padding: 0px 40px;
+  background-color: #2D3748; 
   border-radius: 10px;
 }
 
 .news-article {
-  background-color: #FFFFFF; /* White background for articles */
-  color: #1A202C; /* Dark blue text */
+  background-color: #FFFFFF; 
+  color: #1A202C; 
   border-radius: 10px;
   margin-bottom: 20px;
   padding: 20px;
@@ -65,12 +64,12 @@
 
 .news-article .author {
   font-weight: bold;
-  color: #4A5568; /* Gray for author's name */
+  color: #4A5568; 
 }
 
 .read-more-button {
-  background-color: #FFD700; /* Bright Yellow */
-  color: #1A202C; /* Dark blue text */
+  background-color: #FFD700; 
+  color: #1A202C; 
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -80,5 +79,5 @@
 }
 
 .read-more-button:hover {
-  background-color: #FFC107; /* Slightly darker yellow for hover effect */
+  background-color: #FFC107; 
 }

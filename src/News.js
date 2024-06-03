@@ -62,7 +62,7 @@ function Newscontent() {
   return (
     <>
       <div className="news-container">
-        <p className="heading">News about {category}</p>
+        <p className="heading">NEWS ABOUT {category.toUpperCase()}</p>
         <Slider {...settings}>
           {data.map((article, index) => {
             if (!article.urlToImage) {
