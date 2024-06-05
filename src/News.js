@@ -2,10 +2,94 @@ import React, { useState, useEffect } from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import {FaSearch} from "react-icons/fa";
 import { useParams } from 'react-router-dom';
 import './News.css';
 
-function Newscontent() {
+function Newscontent({category,data}) {
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  return (
+    <>
+      <div className="news-container">
+        <p className="heading">NEWS ABOUT {category.toUpperCase()}</p>
+        <Slider {...settings}>
+          {data.map((article, index) => {
+            if (!article.urlToImage) {
+              return null;
+            }
+            return (
+              <div key={index} className="news-article">
+                <div className="h-60 rounded-t-xl flex justify-center items-center">
+                  <img src={article.urlToImage} alt="" className="h-full w-full object-cover" />
+                </div>
+                <div className="flex flex-col justify-center items-center gap-4 p-4">
+                  <p className="text-xl font-semibold">{article.title}</p>
+                  <p className="author">Author: {article.author ? article.author : "anonymous"}</p>
+                  <button className="read-more-button">
+                    <a href={article.url} target="_blank" rel="noopener noreferrer">Read more</a>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </Slider>
+      </div>
+    </>
+  );
+}
+
+function SearchResult({result}){
+  return(<div className="searchresult">{result.title}</div>)
+}
+
+function Searchbar({data}) {
+  const [input,setInput]=useState("")
+  const [results,setResults]=useState([])
+
+
+  const handleChange = (value) =>{
+    setInput(value);
+    const result=data.filter((articles)=>{
+      return (
+        value &&
+        articles &&
+        articles.urlToImage &&
+        articles.title &&
+        articles.title.toLowerCase().includes(value)
+      );
+    });
+    setResults(result);
+
+  }
+  return (
+    <>
+    <div className="search-container">
+    <div className="input-wrapper">
+      <FaSearch id="search-icon" />
+      <input
+        placeholder="Type to search..."
+        value={input}
+        onChange={(e) => handleChange(e.target.value)}
+      />
+    </div>
+    <div className="resultlist">
+      {results.map((result,id)=>{
+        return <SearchResult result={result} key={id} />
+      })}
+    </div>
+    </div>  
+    </>
+  );
+}
+
+export default function News() {
   const { category } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,58 +134,10 @@ function Newscontent() {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
   return (
     <>
-      <div className="news-container">
-        <p className="heading">NEWS ABOUT {category.toUpperCase()}</p>
-        <Slider {...settings}>
-          {data.map((article, index) => {
-            if (!article.urlToImage) {
-              return null;
-            }
-            return (
-              <div key={index} className="news-article">
-                <div className="h-60 rounded-t-xl flex justify-center items-center">
-                  <img src={article.urlToImage} alt="" className="h-full w-full object-cover" />
-                </div>
-                <div className="flex flex-col justify-center items-center gap-4 p-4">
-                  <p className="text-xl font-semibold">{article.title}</p>
-                  <p className="author">Author: {article.author ? article.author : "anonymous"}</p>
-                  <button className="read-more-button">
-                    <a href={article.url} target="_blank" rel="noopener noreferrer">Read more</a>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </Slider>
-      </div>
-    </>
-  );
-}
-
-function Searchbar() {
-  return (
-    <form className="sbc">
-      <input type="text" className="searchbar" placeholder="Search..." />
-    </form>
-  );
-}
-
-export default function News() {
-  return (
-    <>
-      <Searchbar />
-      <Newscontent />
+      <Searchbar data={data}/>
+      <Newscontent  category={category} data={data} />
     </>
   );
 }
