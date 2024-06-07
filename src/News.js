@@ -1,25 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import {FaSearch} from "react-icons/fa";
+import {FaSearch,FaHome} from "react-icons/fa";
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './News.css';
 
-function Newscontent({category,data}) {
+function Newscontent({category,data,slideIndex}) {
+  const sliderRef=useRef(null);
+
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    initialSlide: 0,
+    ref:sliderRef,
   };
+
+  useEffect(()=>{
+    if(sliderRef.current && slideIndex!==null){
+      //console.log(sliderRef.current);
+        sliderRef.current.slickGoTo(slideIndex);
+    }
+  });
 
   return (
     <>
       <div className="news-container">
         <p className="heading">NEWS ABOUT {category.toUpperCase()}</p>
-        <Slider {...settings}>
+        <Slider  ref={sliderRef}{...settings}>
           {data.map((article, index) => {
             if (!article.urlToImage) {
               return null;
@@ -45,11 +57,31 @@ function Newscontent({category,data}) {
   );
 }
 
-function SearchResult({result}){
-  return(<div className="searchresult">{result.title}</div>)
+function SearchResult({result,onClick}){
+  return(<div className="searchresult" onClick={onClick}>{result.title}</div>)
 }
 
-function Searchbar({data}) {
+function Navbar({data,setSlideIndex}){
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    navigate(-1);  
+  };
+
+  return(
+    <>
+  <nav className="navbar">
+    <div className="navbar-text">The Christian</div>
+    <Searchbar data={data} setSlideIndex={setSlideIndex}/>
+    <div className="navbar-logo" onClick={goHome}>
+        <FaHome className="home-icon" />
+        </div>
+  </nav>
+  </>
+  );
+}
+
+function Searchbar({data,setSlideIndex}) {
   const [input,setInput]=useState("")
   const [results,setResults]=useState([])
 
@@ -66,8 +98,18 @@ function Searchbar({data}) {
       );
     });
     setResults(result);
-
   }
+
+  const handleResultClick = (index) => {
+    // console.log(index);
+    // console.log("---")
+    // console.log("size:",results.length);
+    // console.log(results);
+    setSlideIndex(index);
+    setInput("");
+    setResults([]);
+  };
+
   return (
     <>
     <div className="search-container">
@@ -81,7 +123,9 @@ function Searchbar({data}) {
     </div>
     <div className="resultlist">
       {results.map((result,id)=>{
-        return <SearchResult result={result} key={id} />
+        const index = data.indexOf(result);
+        //console.log("size:",results.length)
+        return <SearchResult result={result} key={id} onClick={() => handleResultClick(index)}/>
       })}
     </div>
     </div>  
@@ -94,6 +138,8 @@ export default function News() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [slideIndex, setSlideIndex] = useState(null);
+  //const goToSlide = useRef(null);
 
   useEffect(() => {
     let url;
@@ -118,7 +164,7 @@ export default function News() {
       })
       .then(data => {
         setData(data.articles);
-        console.log(data);
+        //console.log(data);
         setLoading(false);
       })
       .catch(error => {
@@ -136,8 +182,8 @@ export default function News() {
   }
   return (
     <>
-      <Searchbar data={data}/>
-      <Newscontent  category={category} data={data} />
+      <Navbar data={data} setSlideIndex={setSlideIndex}/>
+      <Newscontent  category={category} data={data} slideIndex={slideIndex}/>
     </>
   );
 }
